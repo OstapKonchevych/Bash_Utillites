@@ -1,0 +1,63 @@
+#!/bin/bash
+
+function explode( )
+{
+	if [ $# -ne 4 ]
+		then
+			echo "explode: expected four parameters!"
+			exit 1
+	fi	
+	
+	local separator=$1
+	local string="$2$separator"
+	local divisions=$3
+	
+	local separatorPositions=()
+	local lastPosition=0
+	local i=0
+	local tmp=0
+	local strlen=0
+	
+	for i in $(seq 0 `expr ${#string} - 1`)
+		do
+			if [ "${string:$i:1}" = "$separator" ]
+				then
+					if [ "$divisions" = "all" -o "$divisions" = "0" ]
+						then
+							separatorPositions[$tmp]=$i
+						else
+							if [ $tmp -lt `expr $divisions - 1` ]
+								then
+									separatorPositions[$tmp]=$i
+								else
+									separatorPositions[$tmp]=`expr ${#string} - 2`
+									break
+							fi			
+					fi
+					tmp=`expr $tmp + 1`			
+			fi		
+		done
+		
+		tmp=0
+		i=0
+		
+		for tmp in ${separatorPositions[*]}
+			do 
+				if [ $i -eq 0 ]
+					then
+						array[$i]="'${string:0:${separatorPositions[0]}}'"
+				elif [ -z ${separatorPositions[`expr $i + 1`]} ]
+					then
+						strlen=`expr $(expr ${#string} - 1) - ${separatorPositions[$(expr $i - 1)]}`
+						strlen=`expr $strlen - 1`
+						array[$i]="'${string:$(expr ${separatorPositions[`expr $i - 1`]} + 1):$strlen}'"
+					else
+						strlen=$(expr ${separatorPositions[$i]} - ${separatorPositions[`expr $i - 1`]})
+						strlen=`expr $strlen - 1`
+						array[$i]="'${string:$(expr ${separatorPositions[`expr $i - 1`]} + 1):$strlen}'"
+				fi	
+				i=`expr $i + 1`	
+			done
+			
+		build_array "$4"
+}

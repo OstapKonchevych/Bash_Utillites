@@ -1,0 +1,14 @@
+#!/bin/bash
+
+  function build_array( )
+  {
+    if [ -z "$1" ]
+      then
+	echo "build_array: expected one parameters!"
+	exit 1
+      else
+	IFS=$'\n'
+	eval "$1=("${array[@]}")"
+	array=()
+    fi  
+  }

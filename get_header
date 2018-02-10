@@ -1,0 +1,36 @@
+#!/bin/bash
+
+function get_header( )
+{
+
+	if [ $# -ne 3 ]
+	  then
+	    echo "get_header: expected three parameters!"
+	    exit 1
+	fi
+	
+	local tmp=()
+	local i=0
+	
+	curl -D "$TEMP_DATA/curl_header.txt" "$1" > /dev/null
+	
+	file_to_array "$TEMP_DATA/curl_header.txt" "lines"
+	
+	for item in ${lines[*]}
+		do
+			headers=()
+			explode ":" "$item" "2" "headers"
+			
+				if [ -z ${headers[1]} ]
+					then
+						continue
+					else
+						tmp[$i]="${headers[0]}"
+						array[$i]=`echo "${headers[1]}" | sed 's/;/ /g'`
+				fi
+			i=`expr $i + 1`		
+		done
+		
+	build_array "$3"
+	
+} 

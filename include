@@ -1,0 +1,32 @@
+#/bin/bash
+
+PATH_BIN="/home/hanter/bin"
+TEMP_DATA="/home/hanter/bin/.tmp"
+
+  if [ ! -f "$PATH_BIN/build_array" ]
+    then
+      echo "build_array: build_array file does not exist!"
+      exit 2
+    else
+      array=()
+      . "$PATH_BIN/build_array"
+  fi
+
+  if [ -z "$1" ]
+    then
+      echo "INCLUDE: Missing first argument!"
+      exit 1
+    else
+      eval "to_inculed=$1"
+      item=''
+      for item in ${to_inculed[*]}
+	do
+	  if [ ! -f "$PATH_BIN/$item" ]
+	    then
+	      echo "INCLUDE: $PATH_BIN/$item file does not exist!"
+	      exit 2
+	    else
+	      . "$PATH_BIN/$item"
+	  fi
+	done
+  fi  

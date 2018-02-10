@@ -1,0 +1,48 @@
+#!/bin/bash
+
+function download_file( )
+{
+
+  local savePath=''
+  local url=''
+  local flags=''
+  
+  if [ $# -lt 1 ]
+    then
+      echo "download_file: expected at least one parameter!"
+      exit 1
+    else
+      url="$1"
+  fi
+  
+  if [ ! -z "$2" -a ! -z "$3" ]
+    then
+      if [ ! -d "$2" ]
+	then
+	  echo "download_file: $2 - is not a directory"
+	  exit 2
+	 else	  
+	 echo "$2"
+	  savePath="-O '$2$3'"
+      fi
+    elif [ ! -z "$2" -a -z "$3" ]
+      then
+	savePath="-P '$2'"
+    elif [ ! -z "$3" -a -z "$2" ]
+      then
+	savePath="-O '$2$3'"	
+  fi  
+  
+  
+  if [ ! -z "$3" ]
+    then
+      fileName="-O $3"
+  fi
+  
+  if [ ! -z "$4" ]
+    then
+      flags="$4"
+  fi    
+  
+  wget "$flags" "$savePath" "$url"
+}

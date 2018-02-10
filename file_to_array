@@ -1,0 +1,27 @@
+#!/bin/bash
+
+function file_to_array()
+{
+  if [ "$#" -ne "2" ]
+    then
+      echo "file_to_array: expected two parameters!"
+      exit 1
+  elif [ ! -f "$1" ]
+    then
+      echo "file_to_array: $1 file does not exist!"
+      exit 2
+  else
+      local index=0
+      local line=''
+      
+	while read line
+	  do
+	    array[$index]="'$line'"
+	    #`echo "$line" | sed 's/"/\"/g'`
+	    #echo "$line"
+	    index=`expr $index + 1`
+	  done < "$1"
+	
+      build_array "$2"     
+  fi
+}  
